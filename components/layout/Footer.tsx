@@ -6,6 +6,7 @@ const QUICK_LINKS = [
   { id: 'services', label: 'Services' },
   { id: 'tools', label: 'Tools' },
   { id: 'projects', label: 'Projects' },
+  { id: 'simulation', label: 'Simulation' },
   { id: 'credentials', label: 'Credentials' },
   { id: 'contact', label: 'Contact' },
   { id: 'book-a-call', label: 'Book a Call' },
