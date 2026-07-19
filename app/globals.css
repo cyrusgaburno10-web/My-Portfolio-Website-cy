@@ -271,7 +271,8 @@ body {
   .marquee-track,
   .hero-avatar-glow-pulse,
   .hero-avatar-ring-spin,
-  .animate-ping {
+  .animate-ping,
+  .animate-pulse {
     animation: none !important;
   }
 }
