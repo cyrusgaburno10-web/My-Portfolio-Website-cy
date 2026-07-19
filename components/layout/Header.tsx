@@ -43,8 +43,11 @@ function NavLinks({
               refs.current[item.id] = el;
             }}
             href={`#${item.id}`}
-            className={`whitespace-nowrap rounded-full font-mono uppercase transition-colors ${linkClassName} ${
-              active ? 'bg-void-deep text-text' : 'text-ash hover:text-text'
+            aria-current={active ? 'location' : undefined}
+            className={`whitespace-nowrap rounded-full border font-mono uppercase transition-all duration-150 ${linkClassName} ${
+              active
+                ? 'translate-y-px border-line bg-void-deep text-text shadow-[inset_0_2px_4px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(0,0,0,0.2)]'
+                : 'border-transparent text-ash hover:border-line hover:text-text active:translate-y-px active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.25)]'
             }`}
           >
             {item.label}
