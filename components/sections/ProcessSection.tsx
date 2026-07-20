@@ -13,6 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import { HeroAvatar } from '@/components/HeroAvatar';
+import { VisitorCounter } from '@/components/VisitorCounter';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
 import { PROJECTS } from '@/lib/projects';
 
@@ -104,6 +105,7 @@ export function ProcessSection() {
             <MapPin size={13} color="var(--periwinkle)" strokeWidth={1.5} />
             Tandag, Caraga, Philippines
           </p>
+          <VisitorCounter />
         </div>
       </div>
 

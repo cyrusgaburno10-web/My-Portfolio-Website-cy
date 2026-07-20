@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { FooterLegalTrigger } from '@/components/FooterLegalTrigger';
-import { VisitorCounter } from '@/components/VisitorCounter';
 
 const QUICK_LINKS = [
   { id: 'process', label: 'Home' },
@@ -54,10 +53,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col-reverse items-center gap-4 border-t border-line pt-6 sm:flex-row sm:justify-between">
-          <div className="flex flex-col items-center gap-1.5 sm:items-start">
-            <p className="text-[12px] text-ash-dim">&copy; {year} Cyrus Gaburno. All rights reserved.</p>
-            <VisitorCounter />
-          </div>
+          <p className="text-[12px] text-ash-dim">&copy; {year} Cyrus Gaburno. All rights reserved.</p>
           <FooterLegalTrigger />
         </div>
       </div>
