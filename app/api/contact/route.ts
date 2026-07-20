@@ -12,7 +12,7 @@ function escapeHtml(value: string): string {
 }
 
 export async function POST(req: Request) {
-  let body: { name?: string; email?: string; message?: string };
+  let body: { name?: string; email?: string; company?: string; message?: string };
   try {
     body = await req.json();
   } catch {
@@ -21,6 +21,7 @@ export async function POST(req: Request) {
 
   const name = (body.name || '').trim();
   const email = (body.email || '').trim();
+  const company = (body.company || '').trim();
   const message = (body.message || '').trim();
 
   if (!name || !email || !message) {
@@ -49,6 +50,7 @@ export async function POST(req: Request) {
       html: `
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
         <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        ${company ? `<p><strong>Company:</strong> ${escapeHtml(company)}</p>` : ''}
         <p><strong>Message:</strong></p>
         <p>${escapeHtml(message).replace(/\n/g, '<br />')}</p>
       `,

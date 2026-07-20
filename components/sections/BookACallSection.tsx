@@ -32,7 +32,7 @@ export function BookACallSection() {
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-8">
         <div>
           <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim">Pick a Time</p>
           <div className="overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">

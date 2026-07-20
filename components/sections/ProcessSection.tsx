@@ -19,7 +19,7 @@ import { PROJECTS } from '@/lib/projects';
 
 const RESUME_PATH = '/resume/Cyrus-Gaburno-Resume.pdf';
 
-const FEATURED_PROJECT = PROJECTS.find((p) => p.id === 'voice-receptionist')!;
+const FEATURED_PROJECT = PROJECTS.find((p) => p.id === 'lead-management')!;
 
 const STAGES = [
   {

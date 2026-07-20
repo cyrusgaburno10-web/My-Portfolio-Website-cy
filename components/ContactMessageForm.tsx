@@ -11,6 +11,7 @@ const inputClass =
 export function ContactMessageForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -24,7 +25,7 @@ export function ContactMessageForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, company, message }),
       });
       const data: { ok?: boolean; error?: string } = await res.json();
 
@@ -37,6 +38,7 @@ export function ContactMessageForm() {
       setStatus('success');
       setName('');
       setEmail('');
+      setCompany('');
       setMessage('');
     } catch {
       setErrorMessage('Something went wrong. Please check your connection and try again.');
@@ -81,6 +83,14 @@ export function ContactMessageForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Your email"
+        className={inputClass}
+        disabled={status === 'submitting'}
+      />
+      <input
+        type="text"
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+        placeholder="Company (optional)"
         className={inputClass}
         disabled={status === 'submitting'}
       />
