@@ -1,5 +1,6 @@
 import { Clock, ListChecks, MessageSquare } from 'lucide-react';
 import { CalendlyEmbed } from '@/components/CalendlyEmbed';
+import { ContactMessageForm } from '@/components/ContactMessageForm';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
 
 const EXPECTATIONS = [
@@ -31,8 +32,18 @@ export function BookACallSection() {
         ))}
       </div>
 
-      <div className="mx-auto mt-8 max-w-2xl overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
-        <CalendlyEmbed />
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
+        <div>
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim">Pick a Time</p>
+          <div className="overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
+            <CalendlyEmbed />
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim">Or Send a Message</p>
+          <ContactMessageForm />
+        </div>
       </div>
     </PageContainer>
   );
