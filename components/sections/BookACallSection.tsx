@@ -17,7 +17,7 @@ export function BookACallSection() {
         subtitle="Book a free discovery call, no pressure, no obligation. We'll map your process, find your biggest automation wins, and hand you a clear plan to save hours every week."
       />
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.3fr] md:gap-10">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.3fr] md:items-start md:gap-10">
         <div className="flex flex-col gap-3">
           {EXPECTATIONS.map((item) => (
             <div
