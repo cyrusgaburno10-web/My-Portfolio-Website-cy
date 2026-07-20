@@ -31,7 +31,7 @@ export function BookACallSection() {
         ))}
       </div>
 
-      <div className="mt-8 overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
+      <div className="mx-auto mt-8 max-w-2xl overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
         <CalendlyEmbed />
       </div>
     </PageContainer>
