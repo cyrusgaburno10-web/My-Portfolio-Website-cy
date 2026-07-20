@@ -8,7 +8,8 @@ export function PageContainer({
   divider?: boolean;
 }) {
   return (
-    <section id={id} className={`scroll-mt-32 ${divider ? 'border-t border-line' : ''}`}>
+    <section id={id} className="scroll-mt-32">
+      {divider && <div className="pulse-divider" aria-hidden="true" />}
       <div className="mx-auto w-full max-w-4xl px-5 py-16 sm:px-8 sm:py-24">{children}</div>
     </section>
   );
