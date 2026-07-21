@@ -48,7 +48,7 @@ export function ContactMessageForm() {
 
   if (status === 'success') {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-void-deep/40 p-10 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-line bg-void-deep/40 p-10 text-center">
         <CheckCircle2 size={28} color="var(--periwinkle)" strokeWidth={1.5} />
         <p className="font-display text-lg font-semibold text-text">Message sent</p>
         <p className="text-[14px] text-ash">Thanks for reaching out. I&rsquo;ll get back to you soon.</p>
@@ -66,7 +66,7 @@ export function ContactMessageForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex h-full flex-col gap-3 rounded-2xl border border-line bg-void-deep/40 p-5"
+      className="flex flex-1 flex-col gap-3 rounded-2xl border border-line bg-void-deep/40 p-5"
     >
       <input
         type="text"

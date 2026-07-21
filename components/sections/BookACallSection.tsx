@@ -32,16 +32,20 @@ export function BookACallSection() {
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:gap-8">
-        <div>
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim">Pick a Time</p>
-          <div className="overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-stretch xl:gap-8">
+        <div className="flex flex-col">
+          <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.16em] text-periwinkle">
+            Pick a Time
+          </p>
+          <div className="flex-1 overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
             <CalendlyEmbed />
           </div>
         </div>
 
-        <div>
-          <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim">Or Send a Message</p>
+        <div className="flex flex-col">
+          <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.16em] text-periwinkle">
+            Or Send a Message
+          </p>
           <ContactMessageForm />
         </div>
       </div>
