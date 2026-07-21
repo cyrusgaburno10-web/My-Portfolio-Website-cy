@@ -1,6 +1,5 @@
 import { Clock, ListChecks, MessageSquare } from 'lucide-react';
-import { CalendlyEmbed } from '@/components/CalendlyEmbed';
-import { ContactMessageForm } from '@/components/ContactMessageForm';
+import { BookingSection } from '@/components/booking/BookingSection';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
 
 const EXPECTATIONS = [
@@ -32,22 +31,8 @@ export function BookACallSection() {
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-stretch xl:gap-8">
-        <div className="flex flex-col">
-          <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.16em] text-periwinkle">
-            Pick a Time
-          </p>
-          <div className="flex-1 overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
-            <CalendlyEmbed />
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-[0.16em] text-periwinkle">
-            Or Send a Message
-          </p>
-          <ContactMessageForm />
-        </div>
+      <div className="mt-8">
+        <BookingSection />
       </div>
     </PageContainer>
   );
