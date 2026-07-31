@@ -17,6 +17,66 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    id: 'sales-to-cash-automation',
+    title: 'AI-Powered Sales-to-Cash Automation (Lead → Contract → Invoice → Payment)',
+    stack: 'n8n + HubSpot + Calendly + Invoice Ninja',
+    description:
+      'Three merged n8n workflows carrying one HubSpot deal from AI-scored lead intake through discovery-call booking, negotiated proposal, and invoice-to-payment.',
+    outcome: 'One deal record tracks every stage from first contact to paid invoice, with zero duplicate CRM entries between sales and finance.',
+    badges: ['AI LEAD SCORING', 'DEAL-UPSERT LOGIC', 'INVOICE-TO-CASH'],
+    challenge:
+      'Sales, scheduling, and invoicing lived in three disconnected tools, so a single lead could end up as three unlinked records with no shared thread from first contact to payment.',
+    howItsBuilt: [
+      { title: 'AI Lead Scoring', body: 'A new CRM lead is scored Hot, Warm, or Cold by Gemini, then upserted into HubSpot as a contact and deal, no duplicate records if the contact already exists.' },
+      { title: 'Discovery Call Booking', body: "A raw contact gets a self-service Calendly link. Since Calendly's free tier has no webhooks, n8n polls the connected Google Calendar every 10 minutes and opens a matching HubSpot deal at Appointment Scheduled." },
+      { title: 'Negotiated Proposal', body: 'After the call, the rep triggers a proposal request that finds that same deal, moves it to Proposal Sent at the real negotiated price, and emails the customer a one-click confirmation link.' },
+      { title: 'Order Confirmation', body: "The customer's click re-enters the same contact and deal, skipping AI scoring entirely since the lead is already human-qualified, and advances the deal to Contract Sent." },
+      { title: 'Invoice & Closed Won', body: 'Invoice Ninja generates the invoice at the confirmed amount, with PayPal wired in as its payment gateway. The deal only flips to Closed Won once the invoice is actually created, not on submission.' },
+      { title: 'Ops Visibility', body: 'Every stage logs to a Google Sheets dashboard and notifies Slack or Gmail, so sales and finance can see deal movement without opening HubSpot.' },
+    ],
+    image: '/projects/sales-to-cash-automation-workflow.png',
+  },
+  {
+    id: 'hire-to-onboard-automation',
+    title: 'AI-Powered Employee Onboarding Automation (Hire to Day-One Ready)',
+    stack: 'n8n + BambooHR + Trello',
+    description:
+      "A manager's new-hire form creates the BambooHR employee record, builds a Trello onboarding checklist due the day before start, and routes IT and manager notifications separately.",
+    outcome: 'New hires arrive to a fully staged BambooHR record, checklist, and department notifications, with duplicate-request protection built in.',
+    badges: ['DUPLICATE-SAFE', 'DEPT-ROUTED ALERTS', 'DAY-ONE READY'],
+    challenge:
+      'New-hire setup meant HR, IT, and the hiring manager each doing their own manual steps in different tools, with no safeguard against a resubmitted request creating a second employee record.',
+    howItsBuilt: [
+      { title: 'New Hire Intake', body: "A manager's new-hire form triggers the workflow and normalizes the submitted data." },
+      { title: 'Duplicate Check', body: 'BambooHR is checked by email before creating anything. An existing match notifies HR instead of creating a second employee record.' },
+      { title: 'Employee Record', body: 'A fresh employee record is created in BambooHR the moment the duplicate check clears.' },
+      { title: 'Onboarding Checklist', body: 'A Trello card and checklist are built for the new hire automatically, due the day before their start date.' },
+      { title: 'Department Routing', body: 'IT provisioning and the hiring manager each get their own distinct Slack notification instead of one combined ping.' },
+      { title: 'Dashboard & Welcome', body: 'The hire is logged to the ops dashboard in Google Sheets and sent a welcome email to close the loop.' },
+    ],
+    image: '/projects/hire-to-onboard-workflow.png',
+  },
+  {
+    id: 'resume-screening-automation',
+    title: 'AI Resume Screening with Human-Approved Candidate Routing',
+    stack: 'n8n + Groq + Trello + Slack',
+    description:
+      'Screens inbound applications by resume content, logs every applicant for audit purposes, and only sends a candidate a scheduling link after a recruiter approves them in Slack.',
+    outcome: 'Every application is parsed, tracked, and routed to the right hiring manager, with no auto-rejection ever happening without a human sign-off.',
+    badges: ['HUMAN-APPROVED ROUTING', 'FULL AUDIT TRAIL', 'COST-CONTROLLED AI'],
+    challenge:
+      'Incoming applications had no consistent screening or tracking, so resumes were read ad hoc, valid candidates could be missed, and there was no record of who was screened out or why.',
+    howItsBuilt: [
+      { title: 'Application Intake', body: 'A Gmail trigger catches new applications. Emails with no resume attachment skip the AI step entirely to control cost.' },
+      { title: 'AI Resume Parsing', body: "A Groq-backed model extracts the candidate's details and role fit from the resume, returned as structured data." },
+      { title: 'Audit Logging', body: 'Every parsed application is logged to a Candidates sheet regardless of outcome, valid or not.' },
+      { title: 'Pipeline Card & Routing', body: "Valid resumes get a card on a Trello recruiting board and route to the right hiring manager's Slack channel by role." },
+      { title: 'Human Approval Gate', body: 'A recruiter is asked to Approve or hold each candidate directly in Slack. Nothing moves forward, or gets rejected, without that human decision.' },
+      { title: 'Scheduling & Decision Log', body: 'Approved candidates receive an interview scheduling email and move to Interview Scheduled on the Trello board; declined candidates are logged and moved to Not Moving Forward.' },
+    ],
+    image: '/projects/resume-screening-workflow.png',
+  },
+  {
     id: 'lead-management',
     title: 'Real Estate Lead Enrichment & Pipeline Automation (GHL replicate)',
     stack: 'n8n + Google Gemini',

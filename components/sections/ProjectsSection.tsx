@@ -7,7 +7,7 @@ export function ProjectsSection() {
       <PageHeader
         as="h2"
         title="Featured Integrations & Automations"
-        subtitle="Six live workflows, each solving a real bottleneck: a lead that went cold, a call that got missed, a document that never got filed. Click any card to see how it's built, step by step."
+        subtitle="Nine live workflows, each solving a real bottleneck: a lead that went cold, a hire that fell through the cracks, a resume that never got read. Click any card to see how it's built, step by step."
       />
       <ProjectGrid />
     </PageContainer>
