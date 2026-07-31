@@ -215,6 +215,13 @@ body {
   }
 }
 
+.hero-avatar-ring-spin {
+  animation-name: hero-ring-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transform-origin: 50% 50%;
+}
+
 @keyframes portal-ripple-expand {
   0% {
     transform: scale(0.4);
