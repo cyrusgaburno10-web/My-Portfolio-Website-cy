@@ -1,10 +1,15 @@
 export const runtime = 'edge';
 
-const COUNTER_URL = 'https://abacus.jasoncameron.dev/hit/cyrusgaburno10-web-my-portfolio-website-cy/homepage-views-v1';
+const NAMESPACE = 'cyrusgaburno10-web-my-portfolio-website-cy';
+const KEY = 'homepage-visits-v1';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const isNewVisit = new URL(request.url).searchParams.get('new') === 'true';
+  const action = isNewVisit ? 'hit' : 'get';
+  const counterUrl = `https://abacus.jasoncameron.dev/${action}/${NAMESPACE}/${KEY}`;
+
   try {
-    const res = await fetch(COUNTER_URL, { cache: 'no-store' });
+    const res = await fetch(counterUrl, { cache: 'no-store' });
     if (!res.ok) throw new Error(`Counter service responded ${res.status}`);
     const data: { value: number } = await res.json();
     return Response.json({ count: data.value });
