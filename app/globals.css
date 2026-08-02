@@ -209,6 +209,12 @@ body {
   background: linear-gradient(90deg, transparent, var(--periwinkle) 50%, transparent);
   box-shadow: 0 0 6px 1px var(--periwinkle);
   animation: pulse-travel 4.5s ease-in-out infinite;
+  animation-delay: var(--pulse-delay, 0s);
+}
+
+.ambient-dot-grid {
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1px);
+  background-size: 34px 34px;
 }
 
 @keyframes hero-ring-spin {
