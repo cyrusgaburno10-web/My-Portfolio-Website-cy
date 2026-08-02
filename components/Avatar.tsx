@@ -5,7 +5,7 @@ import type { LucideIcon } from 'lucide-react';
 interface AvatarProps {
   src: string;
   alt: string;
-  /** 'lg' (~200-300px, hero/about) shows the spinning tilted orbit rings with icons circling them. 'sm' (~40-48px, nav/chat scale) simplifies to a glow and gradient border only. */
+  /** 'lg' (~200-300px, hero/about) shows the frequency-ring hollows with icons circling them. 'sm' (~40-48px, nav/chat scale) simplifies to a glow and gradient border only. */
   tier?: 'sm' | 'lg';
   priority?: boolean;
   className?: string;
@@ -13,36 +13,35 @@ interface AvatarProps {
   orbitIcons?: LucideIcon[];
 }
 
-const ORBITS = [
-  { tilt: 0, rx: 48, ry: 21, color: 'var(--indigo)', duration: '26s', direction: 'normal' as const },
-  { tilt: 60, rx: 48, ry: 21, color: 'var(--periwinkle)', duration: '32s', direction: 'reverse' as const },
-  { tilt: 120, rx: 48, ry: 21, color: 'var(--sky)', duration: '38s', direction: 'normal' as const },
-];
-
 const ICON_RINGS = [
   { radius: 34, duration: '14s', direction: 'normal' as const },
   { radius: 42, duration: '19s', direction: 'reverse' as const },
   { radius: 49, duration: '24s', direction: 'normal' as const },
 ];
 
-/** A closed ring path with radius modulated by overlapping sine waves, so it reads as a frequency/waveform hugging the photo. */
-const FREQUENCY_RING_PATH = (() => {
-  const baseRadius = 35;
+/** Builds a closed ring path with radius modulated by overlapping sine waves, so it reads as a frequency/waveform hollow. */
+function buildFrequencyRingPath(baseRadius: number, harmonics: [number, number, number]) {
   const steps = 140;
   const points: string[] = [];
   for (let i = 0; i <= steps; i++) {
     const theta = (i / steps) * Math.PI * 2;
     const r =
       baseRadius +
-      1.3 * Math.sin(theta * 9 + 0.6) +
-      0.8 * Math.sin(theta * 17 + 2.1) +
-      1.6 * Math.sin(theta * 4 + 1.2);
+      1.3 * Math.sin(theta * harmonics[0] + 0.6) +
+      0.8 * Math.sin(theta * harmonics[1] + 2.1) +
+      1.6 * Math.sin(theta * harmonics[2] + 1.2);
     const x = (50 + r * Math.cos(theta)).toFixed(2);
     const y = (50 + r * Math.sin(theta)).toFixed(2);
     points.push(`${i === 0 ? 'M' : 'L'} ${x} ${y}`);
   }
   return `${points.join(' ')} Z`;
-})();
+}
+
+const FREQUENCY_RINGS = [
+  { path: buildFrequencyRingPath(33, [9, 17, 4]), duration: '40s', direction: 'normal' as const },
+  { path: buildFrequencyRingPath(39, [6, 14, 3]), duration: '46s', direction: 'reverse' as const },
+  { path: buildFrequencyRingPath(45, [11, 5, 19]), duration: '52s', direction: 'normal' as const },
+];
 
 export function Avatar({ src, alt, tier = 'lg', priority, className = '', orbitIcons }: AvatarProps) {
   const isLarge = tier === 'lg';
@@ -87,43 +86,22 @@ export function Avatar({ src, alt, tier = 'lg', priority, className = '', orbitI
             </defs>
           </svg>
 
-          {/* Frequency halo: a waveform ring hugging the photo, slowly rotating */}
-          <svg
-            className="hero-avatar-ring-spin absolute inset-0 h-full w-full overflow-visible"
-            viewBox="0 0 100 100"
-            style={{ animationDuration: '46s', animationDirection: 'reverse' }}
-            aria-hidden="true"
-          >
-            <path
-              d={FREQUENCY_RING_PATH}
-              fill="none"
-              stroke={`url(#${freqGradientId})`}
-              strokeOpacity="0.75"
-              strokeWidth="0.8"
-              strokeLinejoin="round"
-              filter={`url(#${glowFilterId})`}
-            />
-          </svg>
-
-          {/* Orbit rings: same-size tilted ellipses (atom-style), each spinning at its own speed, alternating direction */}
-          {ORBITS.map((orbit, i) => (
+          {/* Frequency hollows: 3 waveform rings at different radii, each slowly spinning at its own speed */}
+          {FREQUENCY_RINGS.map((ring, i) => (
             <svg
               key={i}
               className="hero-avatar-ring-spin absolute inset-0 h-full w-full overflow-visible"
               viewBox="0 0 100 100"
-              style={{ animationDuration: orbit.duration, animationDirection: orbit.direction }}
+              style={{ animationDuration: ring.duration, animationDirection: ring.direction }}
               aria-hidden="true"
             >
-              <ellipse
-                cx="50"
-                cy="50"
-                rx={orbit.rx}
-                ry={orbit.ry}
-                transform={`rotate(${orbit.tilt} 50 50)`}
+              <path
+                d={ring.path}
                 fill="none"
-                stroke={orbit.color}
-                strokeOpacity="0.5"
+                stroke={`url(#${freqGradientId})`}
+                strokeOpacity="0.75"
                 strokeWidth="0.8"
+                strokeLinejoin="round"
                 filter={`url(#${glowFilterId})`}
               />
             </svg>
