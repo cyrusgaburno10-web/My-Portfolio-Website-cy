@@ -65,7 +65,7 @@ export function MessageBubble({ message }: { message: UIMessage }) {
           if (part.type === 'tool-showProjects') {
             return (
               <div key={i} className="w-full">
-                <ProjectMiniList />
+                <ProjectMiniList featuredId="lead-management" />
               </div>
             );
           }

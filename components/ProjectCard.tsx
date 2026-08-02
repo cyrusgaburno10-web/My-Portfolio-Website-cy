@@ -131,8 +131,10 @@ function ProjectMiniCard({ project }: { project: Project }) {
   );
 }
 
-export function ProjectMiniList({ limit = 3 }: { limit?: number }) {
-  const featured = PROJECTS.slice(0, limit);
+export function ProjectMiniList({ limit = 3, featuredId }: { limit?: number; featuredId?: string }) {
+  const pinned = featuredId ? PROJECTS.find((p) => p.id === featuredId) : undefined;
+  const rest = PROJECTS.filter((p) => p.id !== featuredId);
+  const featured = pinned ? [pinned, ...rest].slice(0, limit) : PROJECTS.slice(0, limit);
   const remaining = PROJECTS.length - featured.length;
 
   return (
