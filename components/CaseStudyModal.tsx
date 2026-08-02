@@ -72,6 +72,11 @@ export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
             <h2 className="font-display text-2xl font-semibold text-text">{project.title}</h2>
             <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash-dim">{project.stack}</p>
 
+            <div className="mt-5 flex items-center gap-3 rounded-xl border border-periwinkle/30 bg-periwinkle/5 px-4 py-3">
+              <span className="font-display text-2xl font-semibold text-periwinkle">{project.metric.value}</span>
+              <span className="text-[13px] leading-snug text-ash">{project.metric.label}</span>
+            </div>
+
             <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-line p-4">
                 <div className="mb-2 flex items-center gap-2">

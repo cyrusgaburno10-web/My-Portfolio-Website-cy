@@ -3,6 +3,11 @@ export interface WorkflowStep {
   body: string;
 }
 
+export interface ProjectMetric {
+  value: string;
+  label: string;
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -12,6 +17,7 @@ export interface Project {
   badges: string[];
   challenge: string;
   howItsBuilt: WorkflowStep[];
+  metric: ProjectMetric;
   image?: string;
 }
 
@@ -24,6 +30,7 @@ export const PROJECTS: Project[] = [
       'Three merged n8n workflows carrying one HubSpot deal from AI-scored lead intake through discovery-call booking, negotiated proposal, and invoice-to-payment.',
     outcome: 'One deal record tracks every stage from first contact to paid invoice, with zero duplicate CRM entries between sales and finance.',
     badges: ['AI LEAD SCORING', 'DEAL-UPSERT LOGIC', 'INVOICE-TO-CASH'],
+    metric: { value: '~15 min', label: 'of manual CRM and invoice re-entry eliminated per deal (estimated)' },
     challenge:
       'Sales, scheduling, and invoicing lived in three disconnected tools, so a single lead could end up as three unlinked records with no shared thread from first contact to payment.',
     howItsBuilt: [
@@ -44,6 +51,7 @@ export const PROJECTS: Project[] = [
       "A manager's new-hire form creates the BambooHR employee record, builds a Trello onboarding checklist due the day before start, and routes IT and manager notifications separately.",
     outcome: 'New hires arrive to a fully staged BambooHR record, checklist, and department notifications, with duplicate-request protection built in.',
     badges: ['DUPLICATE-SAFE', 'DEPT-ROUTED ALERTS', 'DAY-ONE READY'],
+    metric: { value: '~20 min', label: 'of manual HR and IT setup eliminated per new hire (estimated)' },
     challenge:
       'New-hire setup meant HR, IT, and the hiring manager each doing their own manual steps in different tools, with no safeguard against a resubmitted request creating a second employee record.',
     howItsBuilt: [
@@ -64,6 +72,7 @@ export const PROJECTS: Project[] = [
       'Screens inbound applications by resume content, logs every applicant for audit purposes, and only sends a candidate a scheduling link after a recruiter approves them in Slack.',
     outcome: 'Every application is parsed, tracked, and routed to the right hiring manager, with no auto-rejection ever happening without a human sign-off.',
     badges: ['HUMAN-APPROVED ROUTING', 'FULL AUDIT TRAIL', 'COST-CONTROLLED AI'],
+    metric: { value: '100%', label: 'of applications logged for audit, regardless of outcome' },
     challenge:
       'Incoming applications had no consistent screening or tracking, so resumes were read ad hoc, valid candidates could be missed, and there was no record of who was screened out or why.',
     howItsBuilt: [
@@ -84,6 +93,7 @@ export const PROJECTS: Project[] = [
       'End-to-end pipeline ingesting leads via webhooks, enriching and scoring with Gemini, then routing through conditional outreach and Slack alerts.',
     outcome: 'Faster lead response and full pipeline visibility.',
     badges: ['AI LEAD SCORING', 'FULL PIPELINE VISIBILITY'],
+    metric: { value: 'Hours → minutes', label: 'estimated lead response time once a lead is AI-scored' },
     challenge:
       "Leads came in from multiple sources with no consistent way to qualify them, so hot prospects sat in a spreadsheet next to dead ends, and follow-up depended on someone remembering to do it.",
     howItsBuilt: [
@@ -103,6 +113,7 @@ export const PROJECTS: Project[] = [
       'Telegram-based expense tracker logging transactions from text, receipts, and PDF statements, with Gemini extracting structured data automatically.',
     outcome: 'Effortless expense logging with auto-categorization.',
     badges: ['AUTO-CATEGORIZED', 'RECEIPT + PDF PARSING'],
+    metric: { value: '~1 min', label: 'estimated logging time per expense, down from a manual spreadsheet entry' },
     challenge:
       'Logging expenses meant manually opening a spreadsheet after every purchase, so receipts piled up and categorization happened in batches, if at all.',
     howItsBuilt: [
@@ -123,6 +134,7 @@ export const PROJECTS: Project[] = [
     outcome:
       'One Asana status change now drives the entire client lifecycle end-to-end, with zero manual follow-up tracking across any stage.',
     badges: ['24/30 STEPS LIVE', '5-STAGE LIFECYCLE', 'ZERO MANUAL FOLLOW-UP'],
+    metric: { value: '5 stages', label: 'of the client lifecycle automated end-to-end from one status change' },
     challenge:
       "Every stage of a client's lifecycle, from first contact to final payment, needed its own manual email, and nothing kept those steps consistent as the workload grew.",
     howItsBuilt: [
@@ -142,6 +154,7 @@ export const PROJECTS: Project[] = [
       'The same Asana-triggered lead engagement lifecycle as the Zapier build above, re-engineered natively in n8n: a 22-node workflow routing task updates through 5 conditional paths of Gmail follow-ups, Google Drive folder handling, and quote follow-up sequences, no Zapier required.',
     outcome: 'Proves the same lead lifecycle logic can run entirely on n8n native nodes, matching the Zapier version stage for stage.',
     badges: ['22-NODE WORKFLOW', '5-PATH ROUTING', 'N8N-NATIVE REBUILD'],
+    metric: { value: '22 nodes', label: 'replicating the same 5-stage lifecycle with zero Zapier dependency' },
     challenge:
       'The Zapier version worked, but it depended on Zapier specifically. The same logic needed to run for clients whose stack does not include it.',
     howItsBuilt: [
@@ -161,6 +174,7 @@ export const PROJECTS: Project[] = [
       'Voice AI receptionist handling appointment booking, rescheduling, and cancellations over live phone calls, with real-time calendar sync and call logging to Airtable.',
     outcome: '24/7 phone coverage, zero missed calls or scheduling errors.',
     badges: ['24/7 COVERAGE', 'ZERO MISSED CALLS'],
+    metric: { value: '24/7', label: 'phone coverage, including after-hours calls that used to go unanswered' },
     challenge: 'Calls outside business hours went unanswered, and every missed call was a missed booking.',
     howItsBuilt: [
       { title: 'Get Slots', body: 'Checks real-time calendar availability the moment a caller asks for a time.' },
@@ -179,6 +193,7 @@ export const PROJECTS: Project[] = [
       "A published, live n8n workflow that analyzes a document's actual content the moment it lands in Drive, then uses a tool-calling AI agent to route it to the correct folder and a second pass to file it into the right sub-folder.",
     outcome: 'New documents are correctly organized within seconds of upload, with zero manual sorting.',
     badges: ['PUBLISHED & LIVE', 'AI-AGENT ROUTING', 'SUB-FOLDER SORTING'],
+    metric: { value: 'Seconds', label: 'to correctly file a new document, down from manual, ad hoc sorting' },
     challenge:
       'New files landed in Drive with no consistent naming or folder structure, so filing them correctly meant opening each one and deciding by hand.',
     howItsBuilt: [

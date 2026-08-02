@@ -67,6 +67,10 @@ function ProjectTile({ project, onOpenCaseStudy }: { project: Project; onOpenCas
         <h3 className="font-display text-[15px] font-semibold leading-snug text-text">{project.title}</h3>
         <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash-dim">{project.stack}</p>
         <p className="text-[13px] leading-relaxed text-ash">{project.description}</p>
+        <div className="flex items-baseline gap-2">
+          <span className="font-display text-xl font-semibold text-periwinkle">{project.metric.value}</span>
+          <span className="text-[12px] leading-snug text-ash-dim">{project.metric.label}</span>
+        </div>
         <p className="text-[13px] leading-relaxed text-text">{project.outcome}</p>
         <div className="flex flex-wrap gap-1.5 pt-1">
           {project.badges.map((badge) => (
