@@ -103,6 +103,11 @@ body {
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
 }
 
+.canvas-dot-grid {
+  background-image: radial-gradient(circle, var(--line) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
 .portal-ripple {
   position: fixed;
   width: 12px;
