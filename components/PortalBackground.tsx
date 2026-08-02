@@ -63,6 +63,13 @@ const ICON_POOL = [
   Waypoints,
 ];
 
+const DATA_LINES = [
+  { top: '12%', left: '-10%', width: '55%', rotate: -20, delay: '0s' },
+  { top: '38%', left: '58%', width: '45%', rotate: 15, delay: '3s' },
+  { top: '68%', left: '-5%', width: '50%', rotate: 8, delay: '6s' },
+  { top: '85%', left: '52%', width: '60%', rotate: -12, delay: '9s' },
+];
+
 const COLUMN_COUNT = 18;
 const TRAIL_LENGTH = 5;
 const CELL_HEIGHT = 60;
@@ -125,6 +132,25 @@ export function PortalBackground({ engagement, phase, theme }: PortalBackgroundP
 
   return (
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void">
+      <div className="ambient-dot-grid absolute inset-0" style={{ opacity: theme === 'dark' ? 0.4 : 0.5 }} />
+
+      {DATA_LINES.map((line, i) => (
+        <div
+          key={i}
+          className="pulse-divider absolute"
+          style={
+            {
+              top: line.top,
+              left: line.left,
+              width: line.width,
+              background: 'color-mix(in srgb, var(--line) 45%, transparent)',
+              transform: `rotate(${line.rotate}deg)`,
+              '--pulse-delay': line.delay,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+
       <div
         className={`rain-field-mask absolute inset-0 ${thinking ? 'rain-thinking-flicker' : ''}`}
         style={{
