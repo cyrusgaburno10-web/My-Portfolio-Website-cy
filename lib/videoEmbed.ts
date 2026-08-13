@@ -1,4 +1,4 @@
-/** Converts a YouTube, Loom, or Vimeo share link into an embeddable iframe URL. Returns null if the link isn't recognized. */
+/** Converts a YouTube, Loom, Vimeo, or Google Drive share link into an embeddable iframe URL. Returns null if the link isn't recognized. */
 export function getVideoEmbedUrl(url: string): string | null {
   let parsed: URL;
   try {
@@ -24,6 +24,11 @@ export function getVideoEmbedUrl(url: string): string | null {
   if (host === 'vimeo.com') {
     const id = parsed.pathname.split('/').filter(Boolean).pop();
     return id ? `https://player.vimeo.com/video/${id}` : null;
+  }
+  if (host === 'drive.google.com') {
+    const fileMatch = parsed.pathname.match(/\/file\/d\/([^/]+)/);
+    const id = fileMatch ? fileMatch[1] : parsed.searchParams.get('id');
+    return id ? `https://drive.google.com/file/d/${id}/preview` : null;
   }
 
   return null;
