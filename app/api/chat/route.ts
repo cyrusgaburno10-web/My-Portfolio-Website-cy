@@ -4,7 +4,7 @@ import { convertToModelMessages, stepCountIs, streamText, tool, type LanguageMod
 import { z } from 'zod';
 import { SYSTEM_PROMPT } from '@/lib/prompt';
 import { getSettings, type SiteSettings } from '@/lib/settings';
-import { buildContactChannels } from '@/lib/contactChannels';
+import { describeContactsForPrompt, getAllContacts } from '@/lib/customContacts';
 import { describeCustomProjectsForPrompt, getCustomProjects } from '@/lib/customProjects';
 
 export const runtime = 'edge';
@@ -51,13 +51,10 @@ export async function POST(req: Request) {
   }
 
   const customProjects = await getCustomProjects();
-  const channels = buildContactChannels(settings);
+  const contacts = await getAllContacts();
 
   const contactAddendum = `CURRENT CONTACT INFO (always use these live values instead of anything else in this prompt if they conflict):
-Email: ${channels.email.value}
-Phone/WhatsApp: ${channels.whatsapp.value}
-LinkedIn: ${channels.linkedin.value}
-Upwork: ${channels.upwork.value}`;
+${describeContactsForPrompt(contacts)}`;
 
   const projectsAddendum =
     customProjects.length > 0

@@ -1,26 +1,33 @@
-import { Briefcase, ExternalLink, Eye, Mail, Phone } from 'lucide-react';
+import { Briefcase, Eye, Globe, Link2, Mail, MessageCircle, Phone, Send } from 'lucide-react';
 import { CopyableContact } from '@/components/CopyableContact';
 import { QrThumb } from '@/components/QrThumb';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
-import { getSettings } from '@/lib/settings';
-import { buildContactChannels } from '@/lib/contactChannels';
+import { getAllContacts } from '@/lib/customContacts';
+import type { ContactIconKey } from '@/lib/contacts';
 import { generateQrSvg } from '@/lib/qr';
 
 const RESUME_PATH = '/resume/Cyrus-Gaburno-Resume.pdf';
 
-export async function ContactSection() {
-  const settings = await getSettings();
-  const channels = buildContactChannels(settings);
+const ICON_MAP: Record<ContactIconKey, typeof Mail> = {
+  mail: Mail,
+  phone: Phone,
+  chat: MessageCircle,
+  globe: Globe,
+  briefcase: Briefcase,
+  send: Send,
+  link: Link2,
+};
 
-  const CHANNELS = [
-    { icon: Mail, ...channels.email },
-    { icon: Phone, ...channels.whatsapp },
-    { icon: ExternalLink, ...channels.linkedin },
-    { icon: Briefcase, ...channels.upwork },
-  ];
+export async function ContactSection() {
+  const contacts = await getAllContacts();
 
   const channelsWithQr = await Promise.all(
-    CHANNELS.map(async (channel) => ({ ...channel, svg: await generateQrSvg(channel.qrUrl) }))
+    contacts.map(async (contact) => ({
+      icon: ICON_MAP[contact.icon],
+      label: contact.label,
+      value: contact.value,
+      svg: await generateQrSvg(contact.link),
+    }))
   );
 
   return (

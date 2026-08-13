@@ -4,10 +4,12 @@ import { ADMIN_SESSION_COOKIE, isValidSessionToken } from '@/lib/adminAuth';
 import { getSettings } from '@/lib/settings';
 import { getAllProjects } from '@/lib/customProjects';
 import { getAllCredentials } from '@/lib/customCredentials';
+import { getAllContacts } from '@/lib/customContacts';
 import { AdminLoginForm } from '@/components/admin/AdminLoginForm';
 import { AdminSettingsPanel } from '@/components/admin/AdminSettingsPanel';
 import { AdminProjectsPanel } from '@/components/admin/AdminProjectsPanel';
 import { AdminCredentialsPanel } from '@/components/admin/AdminCredentialsPanel';
+import { AdminContactsPanel } from '@/components/admin/AdminContactsPanel';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -25,10 +27,11 @@ export default async function AdminPage() {
     );
   }
 
-  const [settings, projects, credentials] = await Promise.all([
+  const [settings, projects, credentials, contacts] = await Promise.all([
     getSettings(),
     getAllProjects(),
     getAllCredentials(),
+    getAllContacts(),
   ]);
 
   return (
@@ -37,6 +40,7 @@ export default async function AdminPage() {
         <AdminSettingsPanel initialSettings={settings} />
         <AdminProjectsPanel initialProjects={projects} />
         <AdminCredentialsPanel initialCredentials={credentials} />
+        <AdminContactsPanel initialContacts={contacts} />
       </div>
     </main>
   );
