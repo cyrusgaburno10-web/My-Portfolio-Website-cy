@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { AlertCircle, CheckCircle2, Loader2, Plus, Trash2, Upload, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Loader2, Pencil, Plus, Save, Trash2, Upload, X } from 'lucide-react';
 import type { Project, WorkflowStep } from '@/lib/projects';
 
 type Status = 'idle' | 'saving' | 'error';
@@ -27,11 +27,27 @@ function emptyForm() {
   };
 }
 
+function formFromProject(project: Project): ReturnType<typeof emptyForm> {
+  return {
+    title: project.title,
+    stack: project.stack,
+    description: project.description,
+    challenge: project.challenge,
+    outcome: project.outcome,
+    metricValue: project.metric.value,
+    metricLabel: project.metric.label,
+    badges: project.badges.join(', '),
+    videoUrl: project.videoUrl || '',
+  };
+}
+
 export function AdminProjectsPanel({ initialProjects }: { initialProjects: Project[] }) {
   const [projects, setProjects] = useState(initialProjects);
   const [form, setForm] = useState(emptyForm());
   const [steps, setSteps] = useState<WorkflowStep[]>([EMPTY_STEP]);
   const [image, setImage] = useState<File | null>(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | undefined>(undefined);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -52,6 +68,27 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
     setSteps((s) => (s.length > 1 ? s.filter((_, i) => i !== index) : s));
   }
 
+  function startEdit(project: Project) {
+    setEditingId(project.id);
+    setForm(formFromProject(project));
+    setSteps(project.howItsBuilt.length > 0 ? project.howItsBuilt.map((s) => ({ ...s })) : [{ ...EMPTY_STEP }]);
+    setImage(null);
+    setCurrentImageUrl(project.image);
+    setStatus('idle');
+    setErrorMessage('');
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setForm(emptyForm());
+    setSteps([{ ...EMPTY_STEP }]);
+    setImage(null);
+    setCurrentImageUrl(undefined);
+    setStatus('idle');
+    setErrorMessage('');
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus('saving');
@@ -69,9 +106,13 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
     data.set('videoUrl', form.videoUrl);
     data.set('howItsBuilt', JSON.stringify(steps));
     if (image) data.set('image', image);
+    if (editingId && currentImageUrl) data.set('currentImage', currentImageUrl);
 
     try {
-      const res = await fetch('/api/admin/projects', { method: 'POST', body: data });
+      const res = await fetch(editingId ? `/api/admin/projects/${editingId}` : '/api/admin/projects', {
+        method: editingId ? 'PUT' : 'POST',
+        body: data,
+      });
       const result: { ok?: boolean; error?: string; project?: Project } = await res.json();
 
       if (!res.ok || !result.ok || !result.project) {
@@ -80,11 +121,12 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
         return;
       }
 
-      setProjects((p) => [result.project as Project, ...p]);
-      setForm(emptyForm());
-      setSteps([{ ...EMPTY_STEP }]);
-      setImage(null);
-      setStatus('idle');
+      if (editingId) {
+        setProjects((p) => p.map((proj) => (proj.id === editingId ? (result.project as Project) : proj)));
+      } else {
+        setProjects((p) => [result.project as Project, ...p]);
+      }
+      cancelEdit();
     } catch {
       setErrorMessage('Could not reach the server. Please check your connection and try again.');
       setStatus('error');
@@ -97,32 +139,44 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
       const res = await fetch(`/api/admin/projects/${id}`, { method: 'DELETE' });
       if (res.ok) {
         setProjects((p) => p.filter((proj) => proj.id !== id));
+        if (editingId === id) cancelEdit();
       }
     } finally {
       setDeletingId(null);
     }
   }
 
-  const customProjects = projects.filter((p) => p.isCustom);
-
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h2 className="font-display text-lg font-semibold text-text">Your Projects</h2>
-        <p className="mt-1 text-[13px] text-ash">Projects you&rsquo;ve added yourself, on top of the original lineup.</p>
+        <p className="mt-1 text-[13px] text-ash">Every case study on your site. Edit any of them, or add a new one below.</p>
       </div>
 
-      {customProjects.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {customProjects.map((project) => (
-            <div
-              key={project.id}
-              className="flex items-center gap-3 rounded-xl border border-line bg-void-deep/40 p-3"
+      <div className="flex flex-col gap-2">
+        {projects.map((project) => (
+          <div
+            key={project.id}
+            className={`flex items-center gap-3 rounded-xl border p-3 transition-colors ${
+              editingId === project.id ? 'border-periwinkle/60 bg-periwinkle/5' : 'border-line bg-void-deep/40'
+            }`}
+          >
+            <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-line bg-void-deep">
+              {project.image && <Image src={project.image} alt="" fill className="object-cover" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[13px] text-text">{project.title}</p>
+              {!project.isCustom && <p className="text-[11px] text-ash-dim">Original case study</p>}
+            </div>
+            <button
+              type="button"
+              onClick={() => startEdit(project)}
+              aria-label={`Edit ${project.title}`}
+              className="shrink-0 rounded-full p-2 text-ash-dim transition-colors hover:text-periwinkle"
             >
-              <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-line bg-void-deep">
-                {project.image && <Image src={project.image} alt="" fill className="object-cover" />}
-              </div>
-              <p className="min-w-0 flex-1 truncate text-[13px] text-text">{project.title}</p>
+              <Pencil size={15} strokeWidth={1.75} />
+            </button>
+            {project.isCustom && (
               <button
                 type="button"
                 onClick={() => handleDelete(project.id)}
@@ -136,13 +190,27 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
                   <Trash2 size={15} strokeWidth={1.75} />
                 )}
               </button>
-            </div>
-          ))}
-        </div>
-      )}
+            )}
+          </div>
+        ))}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 rounded-2xl border border-line bg-void-deep/40 p-6">
-        <h3 className="font-display text-base font-semibold text-text">Add a New Project</h3>
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-display text-base font-semibold text-text">
+            {editingId ? 'Edit Project' : 'Add a New Project'}
+          </h3>
+          {editingId && (
+            <button
+              type="button"
+              onClick={cancelEdit}
+              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-ash-dim transition-colors hover:text-text"
+            >
+              <X size={13} strokeWidth={1.75} />
+              Cancel
+            </button>
+          )}
+        </div>
 
         <div className="flex flex-col gap-1.5">
           <label className={labelClass}>Project title</label>
@@ -307,6 +375,14 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
           <label className={labelClass}>
             Screenshot <span className="text-ash-dim">(optional)</span>
           </label>
+          {currentImageUrl && !image && (
+            <div className="flex items-center gap-3 rounded-xl border border-line p-2">
+              <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border border-line bg-void-deep">
+                <Image src={currentImageUrl} alt="" fill className="object-cover" />
+              </div>
+              <p className="text-[12px] text-ash-dim">Current image — choose a new file below to replace it.</p>
+            </div>
+          )}
           <label
             className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-dashed p-5 text-center transition-colors ${
               image ? 'border-periwinkle/40' : 'border-line hover:border-periwinkle/40'
@@ -332,7 +408,7 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
             type="url"
             value={form.videoUrl}
             onChange={(e) => updateField('videoUrl', e.target.value)}
-            placeholder="A YouTube, Loom, or Vimeo link"
+            placeholder="A YouTube, Loom, Vimeo, or Google Drive link"
             disabled={status === 'saving'}
             className={inputClass}
           />
@@ -354,7 +430,12 @@ export function AdminProjectsPanel({ initialProjects }: { initialProjects: Proje
           {status === 'saving' ? (
             <>
               <Loader2 size={14} strokeWidth={1.75} className="animate-spin" />
-              Adding Project
+              {editingId ? 'Saving' : 'Adding Project'}
+            </>
+          ) : editingId ? (
+            <>
+              <Save size={14} strokeWidth={1.75} />
+              Save Changes
             </>
           ) : (
             <>
