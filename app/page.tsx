@@ -5,6 +5,7 @@ import { ProcessSection } from '@/components/sections/ProcessSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
 import { SimulatorSection } from '@/components/sections/SimulatorSection';
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { ToolsSection } from '@/components/sections/ToolsSection';
 
 // Revalidate periodically so Edge Config changes (calendar URL, contact
@@ -18,6 +19,7 @@ export default function HomePage() {
       <ServicesSection />
       <ToolsSection />
       <ProjectsSection />
+      <TestimonialsSection />
       <SimulatorSection />
       <CredentialsSection />
       <ContactSection />

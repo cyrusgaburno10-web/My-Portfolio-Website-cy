@@ -2,27 +2,40 @@
 
 import Image from 'next/image';
 import { Handshake } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useActiveSection } from '@/lib/use-active-section';
 
-const NAV_ITEMS = [
+function subscribeNever() {
+  return () => {};
+}
+
+function getHasTestimonialsSnapshot(): boolean {
+  return document.getElementById('testimonials') !== null;
+}
+
+function getHasTestimonialsServerSnapshot(): boolean {
+  return false;
+}
+
+const BASE_NAV_ITEMS = [
   { id: 'services', label: 'Services' },
   { id: 'tools', label: 'Tools' },
   { id: 'projects', label: 'Projects' },
+  { id: 'testimonials', label: 'Testimonials' },
   { id: 'simulation', label: 'Simulation' },
   { id: 'credentials', label: 'Credentials' },
   { id: 'contact', label: 'Contact' },
 ];
 
-const SECTION_IDS = NAV_ITEMS.map((item) => item.id);
-
 function NavLinks({
   activeId,
+  items,
   className,
   linkClassName,
 }: {
   activeId: string;
+  items: typeof BASE_NAV_ITEMS;
   className: string;
   linkClassName: string;
 }) {
@@ -34,7 +47,7 @@ function NavLinks({
 
   return (
     <nav className={className}>
-      {NAV_ITEMS.map((item) => {
+      {items.map((item) => {
         const active = activeId === item.id;
         return (
           <a
@@ -59,7 +72,14 @@ function NavLinks({
 }
 
 export function Header() {
-  const activeId = useActiveSection(SECTION_IDS);
+  const hasTestimonials = useSyncExternalStore(
+    subscribeNever,
+    getHasTestimonialsSnapshot,
+    getHasTestimonialsServerSnapshot,
+  );
+
+  const navItems = hasTestimonials ? BASE_NAV_ITEMS : BASE_NAV_ITEMS.filter((item) => item.id !== 'testimonials');
+  const activeId = useActiveSection(navItems.map((item) => item.id));
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-void/85 backdrop-blur-md">
@@ -77,6 +97,7 @@ export function Header() {
 
         <NavLinks
           activeId={activeId}
+          items={navItems}
           className="hidden items-center justify-self-center gap-1 xl:flex"
           linkClassName="px-3 py-1.5 text-[11px] tracking-[0.13em]"
         />
@@ -96,6 +117,7 @@ export function Header() {
       <div className="border-t border-line px-5 py-2.5 sm:px-8 xl:hidden">
         <NavLinks
           activeId={activeId}
+          items={navItems}
           className="nav-scroll flex items-center gap-1.5 overflow-x-auto"
           linkClassName="px-3 py-1.5 text-[11px] tracking-[0.13em] shrink-0"
         />
