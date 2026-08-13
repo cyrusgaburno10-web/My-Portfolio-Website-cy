@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers';
-import { ADMIN_SESSION_COOKIE, isValidSessionToken } from '@/lib/adminAuth';
+import { isAdminAuthenticated } from '@/lib/adminAuth';
+import { writeGlobalConfigItems } from '@/lib/globalConfigWrite';
 
 interface SettingsPayload {
   calendlyUrl?: string;
@@ -8,26 +8,9 @@ interface SettingsPayload {
   aiModel?: string;
 }
 
-async function isAuthenticated(): Promise<boolean> {
-  const cookieStore = await cookies();
-  return isValidSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
-}
-
 export async function POST(req: Request) {
-  if (!(await isAuthenticated())) {
+  if (!(await isAdminAuthenticated())) {
     return Response.json({ error: 'Not signed in.' }, { status: 401 });
-  }
-
-  const token = process.env.VERCEL_API_TOKEN;
-  const configId = process.env.GLOBAL_CONFIG_ID;
-  if (!token || !configId) {
-    return Response.json(
-      {
-        error:
-          'Saving is not set up yet. Add VERCEL_API_TOKEN and GLOBAL_CONFIG_ID to your environment.',
-      },
-      { status: 500 },
-    );
   }
 
   let body: SettingsPayload;
@@ -56,33 +39,15 @@ export async function POST(req: Request) {
     return Response.json({ error: 'AI provider must be "groq" or "openai".' }, { status: 400 });
   }
 
-  const items = [
+  const result = await writeGlobalConfigItems([
     { operation: 'upsert', key: 'calendlyUrl', value: calendlyUrl },
     { operation: 'upsert', key: 'contactDestinationEmail', value: contactDestinationEmail },
     { operation: 'upsert', key: 'aiProvider', value: aiProvider },
     { operation: 'upsert', key: 'aiModel', value: aiModel },
-  ];
+  ]);
 
-  try {
-    const res = await fetch(`https://api.vercel.com/v1/global-config/${configId}/items`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ items }),
-    });
-
-    if (!res.ok) {
-      const data = await res.json().catch(() => null);
-      return Response.json(
-        { error: data?.error?.message || 'Vercel rejected the update. Double-check your API token and config ID.' },
-        { status: 502 },
-      );
-    }
-
-    return Response.json({ ok: true });
-  } catch {
-    return Response.json({ error: 'Could not reach Vercel to save the changes. Please try again.' }, { status: 500 });
+  if (!result.ok) {
+    return Response.json({ error: result.error }, { status: 502 });
   }
+  return Response.json({ ok: true });
 }

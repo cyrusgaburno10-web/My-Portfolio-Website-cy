@@ -19,6 +19,9 @@ export interface Project {
   howItsBuilt: WorkflowStep[];
   metric: ProjectMetric;
   image?: string;
+  videoUrl?: string;
+  /** True for projects added through /admin, as opposed to the hardcoded seed list below. */
+  isCustom?: boolean;
 }
 
 export const PROJECTS: Project[] = [

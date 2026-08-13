@@ -1,7 +1,10 @@
 import { AutomationSimulator } from '@/components/AutomationSimulator';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
+import { getAllProjects } from '@/lib/customProjects';
 
-export function SimulatorSection() {
+export async function SimulatorSection() {
+  const projects = await getAllProjects();
+
   return (
     <PageContainer id="simulation">
       <PageHeader
@@ -9,7 +12,7 @@ export function SimulatorSection() {
         title="Automation Simulator"
         subtitle="Pick a project and run its exact workflow, step by step, to see how the automation behaves in real time."
       />
-      <AutomationSimulator />
+      <AutomationSimulator projects={projects} />
     </PageContainer>
   );
 }

@@ -3,9 +3,11 @@
 import { useChat } from '@ai-sdk/react';
 import { MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PortalBackground, type PortalPhase } from '@/components/PortalBackground';
 import { useTheme } from '@/lib/use-theme';
+import { PROJECTS, type Project } from '@/lib/projects';
+import { ProjectsProvider } from '@/lib/ProjectsContext';
 import { ChatSidebar } from './ChatSidebar';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -19,6 +21,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [input, setInput] = useState('');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [projects, setProjects] = useState<Project[]>(PROJECTS);
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then((res) => res.json())
+      .then((data: { projects?: Project[] }) => {
+        if (Array.isArray(data.projects)) setProjects(data.projects);
+      })
+      .catch(() => {});
+  }, []);
 
   const busy = status === 'submitted' || status === 'streaming';
   const engagement = useMemo(() => Math.min(1, messages.length / ENGAGEMENT_CEILING), [messages.length]);
@@ -39,7 +51,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <ProjectsProvider projects={projects}>
       <PortalBackground engagement={engagement} phase={phase} theme={theme} />
 
       <div className="relative z-0 flex min-h-[100dvh] flex-col lg:flex-row">
@@ -74,6 +86,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <MessageCircle size={22} strokeWidth={1.5} />
         </button>
       )}
-    </>
+    </ProjectsProvider>
   );
 }
