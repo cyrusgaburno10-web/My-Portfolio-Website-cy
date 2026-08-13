@@ -7,6 +7,10 @@ import { ServicesSection } from '@/components/sections/ServicesSection';
 import { SimulatorSection } from '@/components/sections/SimulatorSection';
 import { ToolsSection } from '@/components/sections/ToolsSection';
 
+// Revalidate periodically so Edge Config changes (calendar URL, contact
+// destination, AI provider) reach the live site without a redeploy.
+export const revalidate = 60;
+
 export default function HomePage() {
   return (
     <>

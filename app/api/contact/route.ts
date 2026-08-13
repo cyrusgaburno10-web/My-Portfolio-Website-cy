@@ -1,6 +1,5 @@
 import { Resend } from 'resend';
-
-const TO_EMAIL = 'cyrusgaburno10@gmail.com';
+import { getSettings } from '@/lib/settings';
 
 function escapeHtml(value: string): string {
   return value
@@ -40,11 +39,12 @@ export async function POST(req: Request) {
   }
 
   const resend = new Resend(apiKey);
+  const settings = await getSettings();
 
   try {
     const { error } = await resend.emails.send({
       from: 'Portfolio Contact Form <onboarding@resend.dev>',
-      to: TO_EMAIL,
+      to: settings.contactDestinationEmail,
       replyTo: email,
       subject: `New portfolio message from ${name}`,
       html: `

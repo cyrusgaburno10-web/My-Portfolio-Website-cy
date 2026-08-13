@@ -3,11 +3,21 @@ import { openai } from '@ai-sdk/openai';
 import { convertToModelMessages, stepCountIs, streamText, tool, type LanguageModel, type UIMessage } from 'ai';
 import { z } from 'zod';
 import { SYSTEM_PROMPT } from '@/lib/prompt';
+import { getSettings } from '@/lib/settings';
 
 export const runtime = 'edge';
 export const maxDuration = 30;
 
-function resolveModel(): LanguageModel | null {
+async function resolveModel(): Promise<LanguageModel | null> {
+  const settings = await getSettings();
+
+  if (settings.aiProvider === 'groq' && process.env.GROQ_API_KEY) {
+    return groq(settings.aiModel || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
+  }
+  if (settings.aiProvider === 'openai' && process.env.OPENAI_API_KEY) {
+    return openai(settings.aiModel || process.env.OPENAI_MODEL || 'gpt-4o-mini');
+  }
+
   if (process.env.GROQ_API_KEY) {
     return groq(process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
   }
@@ -30,7 +40,7 @@ const tools = {
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
-  const model = resolveModel();
+  const model = await resolveModel();
 
   if (!model) {
     return new Response(
