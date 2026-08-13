@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { ArrowRight, Maximize2 } from 'lucide-react';
+import { ArrowRight, Maximize2, PlayCircle } from 'lucide-react';
 import type { Project } from '@/lib/projects';
 import { useProjects } from '@/lib/ProjectsContext';
 import { CaseStudyModal } from './CaseStudyModal';
+import { VideoLightbox } from './VideoLightbox';
 
 function platformOf(stack: string) {
   return stack.split(' + ')[0];
@@ -40,30 +41,54 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function ProjectTile({ project, onOpenCaseStudy }: { project: Project; onOpenCaseStudy: (project: Project) => void }) {
+function ProjectTile({
+  project,
+  onOpenCaseStudy,
+  onPlayVideo,
+}: {
+  project: Project;
+  onOpenCaseStudy: (project: Project) => void;
+  onPlayVideo: (project: Project) => void;
+}) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-void-deep/50 transition-colors hover:border-periwinkle/60">
-      <button
-        type="button"
-        onClick={() => onOpenCaseStudy(project)}
-        aria-label={`View case study: ${project.title}`}
-        className="relative block aspect-[16/10] w-full overflow-hidden border-b border-line text-left"
-      >
-        {project.image ? (
-          <ProjectImage src={project.image} alt={`${project.title} workflow screenshot`} />
-        ) : (
-          <PlaceholderTile />
-        )}
-        <span className="pointer-events-none absolute left-3 top-3 rounded-full border border-line bg-void-deep/80 px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.14em] text-periwinkle backdrop-blur-sm">
-          {platformOf(project.stack)}
-        </span>
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-void-deep/0 opacity-0 transition-all duration-200 group-hover:bg-void-deep/60 group-hover:opacity-100">
-          <span className="flex items-center gap-1.5 rounded-full bg-indigo px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white-fleck">
-            <Maximize2 size={12} strokeWidth={2} />
-            View Case Study
+      <div className="group/image relative aspect-[16/10] w-full overflow-hidden border-b border-line">
+        <button
+          type="button"
+          onClick={() => onOpenCaseStudy(project)}
+          aria-label={`View case study: ${project.title}`}
+          className="absolute inset-0 block text-left"
+        >
+          {project.image ? (
+            <ProjectImage src={project.image} alt={`${project.title} workflow screenshot`} />
+          ) : (
+            <PlaceholderTile />
+          )}
+          <span className="pointer-events-none absolute left-3 top-3 rounded-full border border-line bg-void-deep/80 px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.14em] text-periwinkle backdrop-blur-sm">
+            {platformOf(project.stack)}
           </span>
-        </div>
-      </button>
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-void-deep/0 opacity-0 transition-all duration-200 group-hover/image:bg-void-deep/60 group-hover/image:opacity-100">
+            <span className="flex items-center gap-1.5 rounded-full bg-indigo px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white-fleck">
+              <Maximize2 size={12} strokeWidth={2} />
+              View Case Study
+            </span>
+          </div>
+        </button>
+
+        {project.videoUrl && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onPlayVideo(project);
+            }}
+            aria-label={`Play video walkthrough: ${project.title}`}
+            className="absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-void-deep/85 text-white-fleck backdrop-blur-sm transition-transform hover:scale-110"
+          >
+            <PlayCircle size={20} strokeWidth={1.5} />
+          </button>
+        )}
+      </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h3 className="font-display text-[15px] font-semibold leading-snug text-text">{project.title}</h3>
         <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-ash-dim">{project.stack}</p>
@@ -98,15 +123,28 @@ function ProjectTile({ project, onOpenCaseStudy }: { project: Project; onOpenCas
 
 export function ProjectGrid({ projects }: { projects: Project[] }) {
   const [openProject, setOpenProject] = useState<Project | null>(null);
+  const [videoProject, setVideoProject] = useState<Project | null>(null);
 
   return (
     <>
       <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
         {projects.map((project) => (
-          <ProjectTile key={project.id} project={project} onOpenCaseStudy={setOpenProject} />
+          <ProjectTile
+            key={project.id}
+            project={project}
+            onOpenCaseStudy={setOpenProject}
+            onPlayVideo={setVideoProject}
+          />
         ))}
       </div>
       {openProject && <CaseStudyModal project={openProject} onClose={() => setOpenProject(null)} />}
+      {videoProject?.videoUrl && (
+        <VideoLightbox
+          videoUrl={videoProject.videoUrl}
+          title={videoProject.title}
+          onClose={() => setVideoProject(null)}
+        />
+      )}
     </>
   );
 }
