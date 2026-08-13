@@ -2,6 +2,7 @@ import { Clock, ListChecks, MessageSquare } from 'lucide-react';
 import { CalendlyEmbed } from '@/components/CalendlyEmbed';
 import { ContactMessageForm } from '@/components/ContactMessageForm';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
+import { getSettings } from '@/lib/settings';
 
 const EXPECTATIONS = [
   { icon: Clock, text: '20 to 30 minutes, over a call or video chat' },
@@ -9,7 +10,9 @@ const EXPECTATIONS = [
   { icon: MessageSquare, text: 'A clear next step: what to automate first, and roughly what it takes' },
 ];
 
-export function BookACallSection() {
+export async function BookACallSection() {
+  const settings = await getSettings();
+
   return (
     <PageContainer id="book-a-call">
       <PageHeader
@@ -38,7 +41,7 @@ export function BookACallSection() {
             Pick a Time
           </p>
           <div className="flex-1 overflow-hidden rounded-2xl border border-line bg-void-deep/40 p-2 sm:p-4">
-            <CalendlyEmbed />
+            <CalendlyEmbed calendlyUrl={settings.calendlyUrl} />
           </div>
         </div>
 
