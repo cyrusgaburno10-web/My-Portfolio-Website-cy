@@ -1,4 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from 'crypto';
+import { cookies } from 'next/headers';
 
 export const ADMIN_SESSION_COOKIE = 'cg-admin-session';
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -39,3 +40,8 @@ export function isValidSessionToken(token: string | undefined): boolean {
 }
 
 export const SESSION_COOKIE_MAX_AGE = SESSION_MAX_AGE_SECONDS;
+
+export async function isAdminAuthenticated(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return isValidSessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
+}

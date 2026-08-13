@@ -3,8 +3,9 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
-import { CircleCheck, CircleX, X } from 'lucide-react';
+import { CircleCheck, CircleX, PlayCircle, X } from 'lucide-react';
 import type { Project } from '@/lib/projects';
+import { getVideoEmbedUrl } from '@/lib/videoEmbed';
 
 interface CaseStudyModalProps {
   project: Project;
@@ -13,6 +14,7 @@ interface CaseStudyModalProps {
 
 export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
   const reduceMotion = useReducedMotion();
+  const embedUrl = project.videoUrl ? getVideoEmbedUrl(project.videoUrl) : null;
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -127,6 +129,33 @@ export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
                 ))}
               </ol>
             </div>
+
+            {project.videoUrl && (
+              <div className="mt-8 border-t border-line pt-6">
+                <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ash-dim">Video Walkthrough</p>
+                {embedUrl ? (
+                  <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-line">
+                    <iframe
+                      src={embedUrl}
+                      title={`${project.title} video walkthrough`}
+                      className="absolute inset-0 h-full w-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={project.videoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-periwinkle transition-colors hover:border-periwinkle hover:text-text"
+                  >
+                    <PlayCircle size={14} strokeWidth={1.75} />
+                    Watch the Walkthrough
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </motion.div>

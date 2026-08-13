@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { CheckCircle2, FileCheck2, Play, RotateCcw, Upload, X, Zap } from 'lucide-react';
-import { PROJECTS } from '@/lib/projects';
+import type { Project } from '@/lib/projects';
 
 const STEP_DURATION_MS = 1600;
 
@@ -35,8 +35,8 @@ const UPLOAD_CONFIG: Record<string, UploadConfig> = {
   },
 };
 
-export function AutomationSimulator() {
-  const [activeId, setActiveId] = useState(PROJECTS[0].id);
+export function AutomationSimulator({ projects }: { projects: Project[] }) {
+  const [activeId, setActiveId] = useState(projects[0].id);
   const [running, setRunning] = useState(false);
   const [currentStep, setCurrentStep] = useState(-1);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -44,12 +44,12 @@ export function AutomationSimulator() {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const reduceMotion = useReducedMotion();
 
-  const project = PROJECTS.find((p) => p.id === activeId)!;
+  const project = projects.find((p) => p.id === activeId)!;
   const steps = project.howItsBuilt;
   const isComplete = currentStep === steps.length - 1 && !running;
   const uploadConfig = UPLOAD_CONFIG[activeId];
   const readyToRun = !uploadConfig || !!uploadedFile;
-  const projectNumber = PROJECTS.findIndex((p) => p.id === activeId) + 1;
+  const projectNumber = projects.findIndex((p) => p.id === activeId) + 1;
 
   useEffect(() => {
     if (!running) return;
@@ -95,7 +95,7 @@ export function AutomationSimulator() {
   return (
     <div>
       <div className="nav-scroll flex gap-2 overflow-x-auto pb-1">
-        {PROJECTS.map((p) => (
+        {projects.map((p) => (
           <button
             key={p.id}
             type="button"

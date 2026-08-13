@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ArrowRight, Maximize2 } from 'lucide-react';
-import { PROJECTS, type Project } from '@/lib/projects';
+import type { Project } from '@/lib/projects';
+import { useProjects } from '@/lib/ProjectsContext';
 import { CaseStudyModal } from './CaseStudyModal';
 
 function platformOf(stack: string) {
@@ -95,13 +96,13 @@ function ProjectTile({ project, onOpenCaseStudy }: { project: Project; onOpenCas
   );
 }
 
-export function ProjectGrid() {
+export function ProjectGrid({ projects }: { projects: Project[] }) {
   const [openProject, setOpenProject] = useState<Project | null>(null);
 
   return (
     <>
       <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-        {PROJECTS.map((project) => (
+        {projects.map((project) => (
           <ProjectTile key={project.id} project={project} onOpenCaseStudy={setOpenProject} />
         ))}
       </div>
@@ -132,10 +133,11 @@ function ProjectMiniCard({ project }: { project: Project }) {
 }
 
 export function ProjectMiniList({ limit = 3, featuredId }: { limit?: number; featuredId?: string }) {
-  const pinned = featuredId ? PROJECTS.find((p) => p.id === featuredId) : undefined;
-  const rest = PROJECTS.filter((p) => p.id !== featuredId);
-  const featured = pinned ? [pinned, ...rest].slice(0, limit) : PROJECTS.slice(0, limit);
-  const remaining = PROJECTS.length - featured.length;
+  const projects = useProjects();
+  const pinned = featuredId ? projects.find((p) => p.id === featuredId) : undefined;
+  const rest = projects.filter((p) => p.id !== featuredId);
+  const featured = pinned ? [pinned, ...rest].slice(0, limit) : projects.slice(0, limit);
+  const remaining = projects.length - featured.length;
 
   return (
     <div className="flex w-full flex-col gap-2">
@@ -146,7 +148,7 @@ export function ProjectMiniList({ limit = 3, featuredId }: { limit?: number; fea
         href="#projects"
         className="mt-1 inline-flex items-center justify-center gap-1.5 rounded-full border border-line px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ash transition-colors hover:border-periwinkle hover:text-text"
       >
-        {remaining > 0 ? `View all ${PROJECTS.length} projects` : 'View projects'}
+        {remaining > 0 ? `View all ${projects.length} projects` : 'View projects'}
         <ArrowRight size={12} strokeWidth={1.75} />
       </a>
     </div>
