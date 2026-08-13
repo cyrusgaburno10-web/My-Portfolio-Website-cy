@@ -83,9 +83,12 @@ function ProjectTile({
               onPlayVideo(project);
             }}
             aria-label={`Play video walkthrough: ${project.title}`}
-            className="absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-void-deep/85 text-white-fleck backdrop-blur-sm transition-transform hover:scale-110"
+            className="absolute bottom-3 right-3 z-10 flex h-14 w-14 items-center justify-center rounded-full"
           >
-            <PlayCircle size={20} strokeWidth={1.5} />
+            <span className="animate-ping absolute inset-0 rounded-full bg-indigo opacity-60" />
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo text-white-fleck shadow-[0_8px_30px_-6px_var(--indigo)] transition-transform group-hover/image:scale-105 hover:scale-110">
+              <PlayCircle size={26} strokeWidth={1.5} />
+            </span>
           </button>
         )}
       </div>
