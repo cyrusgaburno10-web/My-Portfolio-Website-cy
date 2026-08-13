@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
 import { CircleCheck, CircleX, PlayCircle, X } from 'lucide-react';
 import type { Project } from '@/lib/projects';
-import { getVideoEmbedUrl } from '@/lib/videoEmbed';
+import { VideoLightbox } from './VideoLightbox';
 
 interface CaseStudyModalProps {
   project: Project;
@@ -14,7 +14,7 @@ interface CaseStudyModalProps {
 
 export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
   const reduceMotion = useReducedMotion();
-  const embedUrl = project.videoUrl ? getVideoEmbedUrl(project.videoUrl) : null;
+  const [videoOpen, setVideoOpen] = useState(false);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -133,32 +133,34 @@ export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
             {project.videoUrl && (
               <div className="mt-8 border-t border-line pt-6">
                 <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ash-dim">Video Walkthrough</p>
-                {embedUrl ? (
-                  <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-line">
-                    <iframe
-                      src={embedUrl}
-                      title={`${project.title} video walkthrough`}
-                      className="absolute inset-0 h-full w-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
+                <button
+                  type="button"
+                  onClick={() => setVideoOpen(true)}
+                  aria-label={`Play video walkthrough: ${project.title}`}
+                  className="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-void-deep"
+                >
+                  {project.image && (
+                    <Image
+                      src={project.image}
+                      alt=""
+                      fill
+                      className="object-cover opacity-30 transition-opacity duration-200 group-hover:opacity-40"
                     />
-                  </div>
-                ) : (
-                  <a
-                    href={project.videoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-line px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-periwinkle transition-colors hover:border-periwinkle hover:text-text"
-                  >
-                    <PlayCircle size={14} strokeWidth={1.75} />
-                    Watch the Walkthrough
-                  </a>
-                )}
+                  )}
+                  <span className="relative flex items-center gap-2 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-transform duration-200 group-hover:scale-105">
+                    <PlayCircle size={16} strokeWidth={1.75} />
+                    Watch Video Walkthrough
+                  </span>
+                </button>
               </div>
             )}
           </div>
         </div>
       </motion.div>
+
+      {videoOpen && project.videoUrl && (
+        <VideoLightbox videoUrl={project.videoUrl} title={project.title} onClose={() => setVideoOpen(false)} />
+      )}
     </motion.div>
   );
 }
