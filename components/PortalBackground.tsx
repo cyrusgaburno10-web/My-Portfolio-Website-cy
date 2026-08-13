@@ -131,8 +131,8 @@ export function PortalBackground({ engagement, phase, theme }: PortalBackgroundP
   const opacityScale = palette.opacityScale * lerp(0.45, 1, engagement);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void">
-      <div className="ambient-dot-grid absolute inset-0" style={{ opacity: theme === 'dark' ? 0.4 : 0.5 }} />
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-void-deep">
+      <div className="canvas-dot-grid absolute inset-0" />
 
       {DATA_LINES.map((line, i) => (
         <div

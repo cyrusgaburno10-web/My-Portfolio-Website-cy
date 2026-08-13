@@ -111,7 +111,7 @@ export function AutomationSimulator() {
         ))}
       </div>
 
-      <div className="canvas-dot-grid mt-6 rounded-2xl border border-line bg-void-deep/60 p-6 sm:p-8">
+      <div className="ambient-dot-grid mt-6 rounded-2xl border border-line bg-void p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <div className="inline-flex items-center gap-2">
             <span className={`h-2 w-2 rounded-full ${statusDotClass}`} />
