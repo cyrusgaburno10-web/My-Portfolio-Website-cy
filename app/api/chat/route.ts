@@ -3,15 +3,14 @@ import { openai } from '@ai-sdk/openai';
 import { convertToModelMessages, stepCountIs, streamText, tool, type LanguageModel, type UIMessage } from 'ai';
 import { z } from 'zod';
 import { SYSTEM_PROMPT } from '@/lib/prompt';
-import { getSettings } from '@/lib/settings';
+import { getSettings, type SiteSettings } from '@/lib/settings';
+import { buildContactChannels } from '@/lib/contactChannels';
 import { describeCustomProjectsForPrompt, getCustomProjects } from '@/lib/customProjects';
 
 export const runtime = 'edge';
 export const maxDuration = 30;
 
-async function resolveModel(): Promise<LanguageModel | null> {
-  const settings = await getSettings();
-
+function resolveModel(settings: SiteSettings): LanguageModel | null {
   if (settings.aiProvider === 'groq' && process.env.GROQ_API_KEY) {
     return groq(settings.aiModel || process.env.GROQ_MODEL || 'llama-3.3-70b-versatile');
   }
@@ -41,7 +40,8 @@ const tools = {
 
 export async function POST(req: Request) {
   const { messages }: { messages: UIMessage[] } = await req.json();
-  const model = await resolveModel();
+  const settings = await getSettings();
+  const model = resolveModel(settings);
 
   if (!model) {
     return new Response(
@@ -51,10 +51,20 @@ export async function POST(req: Request) {
   }
 
   const customProjects = await getCustomProjects();
-  const system =
+  const channels = buildContactChannels(settings);
+
+  const contactAddendum = `CURRENT CONTACT INFO (always use these live values instead of anything else in this prompt if they conflict):
+Email: ${channels.email.value}
+Phone/WhatsApp: ${channels.whatsapp.value}
+LinkedIn: ${channels.linkedin.value}
+Upwork: ${channels.upwork.value}`;
+
+  const projectsAddendum =
     customProjects.length > 0
-      ? `${SYSTEM_PROMPT}\n\nADDITIONAL PROJECTS (added by Cyrus after this prompt was written — just as real, and just as worth mentioning, as the ones above):\n${describeCustomProjectsForPrompt(customProjects)}`
-      : SYSTEM_PROMPT;
+      ? `\n\nADDITIONAL PROJECTS (added by Cyrus after this prompt was written — just as real, and just as worth mentioning, as the ones above):\n${describeCustomProjectsForPrompt(customProjects)}`
+      : '';
+
+  const system = `${SYSTEM_PROMPT}\n\n${contactAddendum}${projectsAddendum}`;
 
   const result = streamText({
     model,
