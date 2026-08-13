@@ -2,6 +2,7 @@
 
 import { useChat } from '@ai-sdk/react';
 import { MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { PortalBackground, type PortalPhase } from '@/components/PortalBackground';
 import { useTheme } from '@/lib/use-theme';
@@ -12,6 +13,7 @@ import { Header } from './Header';
 const ENGAGEMENT_CEILING = 12;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const { theme } = useTheme();
   const { messages, sendMessage, status, error } = useChat();
   const [input, setInput] = useState('');
@@ -28,6 +30,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     sendMessage({ text: trimmed });
     setInput('');
     setMobileOpen(true);
+  }
+
+  // The owner-only settings panel is a separate, private surface — it
+  // skips the public nav, footer, and AI chat entirely.
+  if (pathname?.startsWith('/admin')) {
+    return <>{children}</>;
   }
 
   return (
