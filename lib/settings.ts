@@ -5,11 +5,13 @@ export interface SiteSettings {
   contactDestinationEmail: string;
   aiProvider?: 'groq' | 'openai';
   aiModel?: string;
+  showVisitorCount: boolean;
 }
 
 const DEFAULTS: SiteSettings = {
   calendlyUrl: 'https://calendly.com/cyrusgaburno10/new-meeting',
   contactDestinationEmail: 'cyrusgaburno10@gmail.com',
+  showVisitorCount: true,
 };
 
 /**
@@ -23,11 +25,12 @@ export async function getSettings(): Promise<SiteSettings> {
   if (!process.env.GLOBAL_CONFIG) return DEFAULTS;
 
   try {
-    const [calendlyUrl, contactDestinationEmail, aiProvider, aiModel] = await Promise.all([
+    const [calendlyUrl, contactDestinationEmail, aiProvider, aiModel, showVisitorCount] = await Promise.all([
       get<string>('calendlyUrl'),
       get<string>('contactDestinationEmail'),
       get<string>('aiProvider'),
       get<string>('aiModel'),
+      get<boolean>('showVisitorCount'),
     ]);
 
     return {
@@ -35,6 +38,7 @@ export async function getSettings(): Promise<SiteSettings> {
       contactDestinationEmail: contactDestinationEmail || DEFAULTS.contactDestinationEmail,
       aiProvider: aiProvider === 'groq' || aiProvider === 'openai' ? aiProvider : undefined,
       aiModel: aiModel || undefined,
+      showVisitorCount: typeof showVisitorCount === 'boolean' ? showVisitorCount : DEFAULTS.showVisitorCount,
     };
   } catch {
     return DEFAULTS;
