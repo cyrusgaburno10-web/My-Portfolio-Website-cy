@@ -105,7 +105,7 @@ export function Header() {
         <div className="flex shrink-0 items-center justify-self-end gap-2 sm:gap-3">
           <a
             href="#book-a-call"
-            className="inline-flex items-center gap-1.5 rounded-full bg-indigo px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white-fleck transition-transform hover:-translate-y-0.5 active:scale-[0.97] sm:px-5"
+            className="inline-flex items-center gap-1.5 rounded-full bg-indigo px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-white-fleck transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--indigo)] active:translate-y-0 active:scale-[0.97] sm:px-5"
           >
             <Handshake size={14} strokeWidth={1.75} />
             Hire Me

@@ -25,10 +25,30 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
+const TITLE = "Cyrus Gaburno: AI Automation Specialist";
+const DESCRIPTION =
+  "Ask Cyrus Gaburno's AI avatar about his automation projects, skills, and how he can help scale your business with n8n, Zapier, and AI-powered workflows.";
+
 export const metadata: Metadata = {
-  title: "Cyrus Gaburno: AI Automation Specialist",
-  description:
-    "Ask Cyrus Gaburno's AI avatar about his automation projects, skills, and how he can help scale your business with n8n, Zapier, and AI-powered workflows.",
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Cyrus Gaburno",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 const THEME_INIT_SCRIPT = `

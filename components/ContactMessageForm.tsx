@@ -114,7 +114,7 @@ export function ContactMessageForm() {
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="inline-flex items-center justify-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+        className="inline-flex items-center justify-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--indigo)] active:translate-y-0 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none"
       >
         {status === 'submitting' ? (
           <>
