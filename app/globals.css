@@ -348,6 +348,13 @@ body {
   .pulse-divider::after {
     opacity: 0.5 !important;
   }
+
+  /* Scroll-reveal entrances (motion's initial/whileInView, applied as inline styles) skip straight to their
+     final state instead of staying invisible until scrolled into view. */
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 .marquee-track:hover {

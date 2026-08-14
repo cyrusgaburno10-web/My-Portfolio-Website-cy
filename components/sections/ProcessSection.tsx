@@ -82,7 +82,7 @@ export function ProcessSection() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#projects"
-              className="inline-flex items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--indigo)] active:translate-y-0 active:scale-[0.97]"
             >
               View Projects
               <ArrowRight size={14} strokeWidth={1.75} />
@@ -114,13 +114,13 @@ export function ProcessSection() {
         <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ash-dim">Featured Workflow</p>
         <div className="overflow-hidden rounded-2xl border border-line bg-void-deep/40">
           {FEATURED_PROJECT.image && (
-            <div className="relative aspect-[2246/1188] w-full border-b border-line">
+            <div className="relative aspect-[2/1] w-full border-b border-line">
               <Image
                 src={FEATURED_PROJECT.image}
                 alt={`${FEATURED_PROJECT.title} workflow screenshot`}
                 fill
                 priority
-                className="object-cover saturate-[1.15] contrast-[1.05]"
+                className="object-cover object-left saturate-[1.15] contrast-[1.05]"
                 sizes="(min-width: 768px) 896px, 100vw"
               />
             </div>
@@ -202,7 +202,7 @@ export function ProcessSection() {
         </div>
         <a
           href="#projects"
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-transform hover:-translate-y-0.5"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--indigo)] active:translate-y-0 active:scale-[0.97]"
         >
           View Projects
           <ArrowRight size={14} strokeWidth={1.75} />

@@ -137,7 +137,7 @@ export function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
                   type="button"
                   onClick={() => setVideoOpen(true)}
                   aria-label={`Play video walkthrough: ${project.title}`}
-                  className="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-void-deep"
+                  className="group relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-line bg-void-deep transition-transform active:scale-[0.98]"
                 >
                   {project.image && (
                     <Image

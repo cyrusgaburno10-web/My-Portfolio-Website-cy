@@ -134,8 +134,10 @@ export function AutomationSimulator({ projects }: { projects: Project[] }) {
                 type="button"
                 onClick={handleRun}
                 disabled={!readyToRun}
-                className={`inline-flex items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-transform ${
-                  readyToRun ? 'hover:-translate-y-0.5' : 'cursor-not-allowed opacity-40'
+                className={`inline-flex items-center gap-1.5 rounded-full bg-indigo px-5 py-2.5 font-mono text-[12px] uppercase tracking-[0.14em] text-white-fleck transition-all ${
+                  readyToRun
+                    ? 'hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_var(--indigo)] active:translate-y-0 active:scale-[0.97]'
+                    : 'cursor-not-allowed opacity-40'
                 }`}
               >
                 <Play size={14} strokeWidth={1.75} />

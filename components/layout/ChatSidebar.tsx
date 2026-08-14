@@ -38,7 +38,7 @@ function ChatPanelContent({
   return (
     <>
       {!started ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-5 py-8 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-5 pb-28 pt-8 text-center">
           <AvatarSlot phase={phase} size="sm" />
           <div className="space-y-1.5">
             <h2 className="font-display text-xl font-semibold text-text">Hey, I&rsquo;m Cyrus&rsquo;s AI 👋</h2>

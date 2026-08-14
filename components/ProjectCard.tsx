@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ArrowRight, Maximize2, PlayCircle } from 'lucide-react';
 import type { Project } from '@/lib/projects';
 import { useProjects } from '@/lib/ProjectsContext';
+import { ScrollReveal } from '@/components/ScrollReveal';
 import { CaseStudyModal } from './CaseStudyModal';
 import { VideoLightbox } from './VideoLightbox';
 
@@ -34,7 +35,7 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
       src={src}
       alt={alt}
       fill
-      className="object-cover saturate-[1.15] contrast-[1.05] transition-transform duration-300 group-hover:scale-[1.04]"
+      className="object-cover object-left saturate-[1.15] contrast-[1.05] transition-transform duration-300 group-hover:scale-[1.04]"
       sizes="(min-width: 640px) 50vw, 100vw"
       onError={() => setErrored(true)}
     />
@@ -52,12 +53,12 @@ function ProjectTile({
 }) {
   return (
     <article className="group flex flex-col overflow-hidden rounded-xl border border-line bg-void-deep/50 transition-colors hover:border-periwinkle/60">
-      <div className="group/image relative aspect-[16/10] w-full overflow-hidden border-b border-line">
+      <div className="group/image relative aspect-[2/1] w-full overflow-hidden border-b border-line">
         <button
           type="button"
           onClick={() => onOpenCaseStudy(project)}
           aria-label={`View case study: ${project.title}`}
-          className="absolute inset-0 block text-left"
+          className="absolute inset-0 block text-left transition-transform active:scale-[0.99]"
         >
           {project.image ? (
             <ProjectImage src={project.image} alt={`${project.title} workflow screenshot`} />
@@ -86,7 +87,7 @@ function ProjectTile({
             className="absolute bottom-3 right-3 z-10 flex h-14 w-14 items-center justify-center rounded-full"
           >
             <span className="animate-ping absolute inset-0 rounded-full bg-indigo opacity-60" />
-            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo text-white-fleck shadow-[0_8px_30px_-6px_var(--indigo)] transition-transform group-hover/image:scale-105 hover:scale-110">
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-indigo text-white-fleck shadow-[0_8px_30px_-6px_var(--indigo)] transition-transform group-hover/image:scale-105 hover:scale-110 active:scale-95">
               <PlayCircle size={26} strokeWidth={1.5} />
             </span>
           </button>
@@ -131,13 +132,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
   return (
     <>
       <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectTile
-            key={project.id}
-            project={project}
-            onOpenCaseStudy={setOpenProject}
-            onPlayVideo={setVideoProject}
-          />
+        {projects.map((project, i) => (
+          <ScrollReveal key={project.id} delay={Math.min((i % 2) * 0.08, 0.16)}>
+            <ProjectTile project={project} onOpenCaseStudy={setOpenProject} onPlayVideo={setVideoProject} />
+          </ScrollReveal>
         ))}
       </div>
       {openProject && <CaseStudyModal project={openProject} onClose={() => setOpenProject(null)} />}

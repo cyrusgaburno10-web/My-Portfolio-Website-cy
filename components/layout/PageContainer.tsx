@@ -1,3 +1,5 @@
+import { ScrollReveal } from '@/components/ScrollReveal';
+
 export function PageContainer({
   id,
   children,
@@ -25,9 +27,9 @@ export function PageHeader({
   as?: 'h1' | 'h2';
 }) {
   return (
-    <div className="mb-12 max-w-2xl sm:mb-16">
+    <ScrollReveal className="mb-12 max-w-2xl sm:mb-16">
       <Heading className="font-display text-3xl font-semibold leading-tight text-text sm:text-4xl">{title}</Heading>
       {subtitle && <p className="mt-4 text-[15px] leading-relaxed text-ash">{subtitle}</p>}
-    </div>
+    </ScrollReveal>
   );
 }
