@@ -6,6 +6,7 @@ interface SettingsPayload {
   contactDestinationEmail?: string;
   aiProvider?: string;
   aiModel?: string;
+  showVisitorCount?: boolean;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -26,6 +27,7 @@ export async function POST(req: Request) {
   const contactDestinationEmail = (body.contactDestinationEmail || '').trim();
   const aiProvider = (body.aiProvider || '').trim();
   const aiModel = (body.aiModel || '').trim();
+  const showVisitorCount = body.showVisitorCount !== false;
 
   if (calendlyUrl) {
     try {
@@ -46,6 +48,7 @@ export async function POST(req: Request) {
     { operation: 'upsert', key: 'contactDestinationEmail', value: contactDestinationEmail },
     { operation: 'upsert', key: 'aiProvider', value: aiProvider },
     { operation: 'upsert', key: 'aiModel', value: aiModel },
+    { operation: 'upsert', key: 'showVisitorCount', value: showVisitorCount },
   ]);
 
   if (!result.ok) {

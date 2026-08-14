@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
 
@@ -75,6 +76,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full antialiased">
         <AppShell>{children}</AppShell>
+        <Analytics />
       </body>
     </html>
   );

@@ -16,6 +16,7 @@ import { HeroAvatar } from '@/components/HeroAvatar';
 import { VisitorCounter } from '@/components/VisitorCounter';
 import { PageContainer, PageHeader } from '@/components/layout/PageContainer';
 import { PROJECTS } from '@/lib/projects';
+import { getSettings } from '@/lib/settings';
 
 const RESUME_PATH = '/resume/Cyrus-Gaburno-Resume.pdf';
 
@@ -60,7 +61,9 @@ const STAGES = [
   },
 ];
 
-export function ProcessSection() {
+export async function ProcessSection() {
+  const settings = await getSettings();
+
   return (
     <PageContainer id="process" divider={false}>
       {/* Hero */}
@@ -105,7 +108,7 @@ export function ProcessSection() {
             <MapPin size={13} color="var(--periwinkle)" strokeWidth={1.5} />
             Tandag, Caraga, Philippines
           </p>
-          <VisitorCounter />
+          {settings.showVisitorCount && <VisitorCounter />}
         </div>
       </div>
 

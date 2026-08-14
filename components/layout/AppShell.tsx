@@ -4,6 +4,7 @@ import { useChat } from '@ai-sdk/react';
 import { MessageCircle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { CustomCursor } from '@/components/CustomCursor';
 import { PortalBackground, type PortalPhase } from '@/components/PortalBackground';
 import { useTheme } from '@/lib/use-theme';
 import { PROJECTS, type Project } from '@/lib/projects';
@@ -52,6 +53,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ProjectsProvider projects={projects}>
+      <CustomCursor />
       <PortalBackground engagement={engagement} phase={phase} theme={theme} />
 
       <div className="relative z-0 flex min-h-[100dvh] flex-col lg:flex-row">

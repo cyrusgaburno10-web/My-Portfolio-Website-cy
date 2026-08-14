@@ -34,6 +34,7 @@ export function AdminSettingsPanel({ initialSettings }: { initialSettings: SiteS
   const [contactDestinationEmail, setContactDestinationEmail] = useState(initialSettings.contactDestinationEmail);
   const [aiProvider, setAiProvider] = useState(initialSettings.aiProvider || '');
   const [aiModel, setAiModel] = useState(initialSettings.aiModel || '');
+  const [showVisitorCount, setShowVisitorCount] = useState(initialSettings.showVisitorCount);
   const [status, setStatus] = useState<Status>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [loggingOut, setLoggingOut] = useState(false);
@@ -61,6 +62,7 @@ export function AdminSettingsPanel({ initialSettings }: { initialSettings: SiteS
           contactDestinationEmail,
           aiProvider,
           aiModel,
+          showVisitorCount,
         }),
       });
       const data: { ok?: boolean; error?: string } = await res.json();
@@ -153,6 +155,39 @@ export function AdminSettingsPanel({ initialSettings }: { initialSettings: SiteS
           <p className="text-[12px] leading-relaxed text-ash-dim">
             Only change this if you know the exact model name for your chosen provider.
           </p>
+        </div>
+
+        <div className="border-t border-line pt-5">
+          <h2 className="font-display text-[15px] font-semibold text-text">Analytics</h2>
+          <p className="mt-1 text-[12px] text-ash-dim">
+            Real visitor data from Vercel Web Analytics is always tracked privately in your Vercel dashboard, never
+            shown on the site. This just controls a small public badge.
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between gap-4 rounded-xl border border-line p-4">
+          <div>
+            <p className="text-[13px] font-medium text-text">Show visitor count on site</p>
+            <p className="mt-0.5 text-[12px] text-ash-dim">
+              Displays a small &ldquo;X visits&rdquo; badge next to your photo in the hero.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showVisitorCount}
+            onClick={() => setShowVisitorCount((v) => !v)}
+            disabled={status === 'saving'}
+            className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors ${
+              showVisitorCount ? 'border-periwinkle bg-periwinkle/30' : 'border-line bg-void-deep/60'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 h-5 w-5 rounded-full bg-white-fleck transition-transform ${
+                showVisitorCount ? 'translate-x-[22px]' : 'translate-x-0.5'
+              }`}
+            />
+          </button>
         </div>
 
         {status === 'error' && (
